@@ -34,6 +34,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
+  flutter_card_swiper: ^7.0.2
 
 dev_dependencies:
   flutter_test:
@@ -59,6 +60,20 @@ flutter:
 
   assets:
     - assets/images/
+  fonts:
+    - family: Ubuntu
+      fonts:
+        - asset: assets/fonts/Ubuntu-Bold.ttf
+        - asset: assets/fonts/Ubuntu-BoldItalic.ttf
+          style: italic
+        - asset: assets/fonts/Ubuntu-Italic.ttf
+          style: italic
+        - asset: assets/fonts/Ubuntu-Light.ttf
+        - asset: assets/fonts/Ubuntu-LightItalic.ttf
+          style: italic
+        - asset: assets/fonts/Ubuntu-Medium.ttf
+        - asset: assets/fonts/Ubuntu-MediumItalic.ttf
+        - asset: assets/fonts/Ubuntu-Regular.ttf
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg
