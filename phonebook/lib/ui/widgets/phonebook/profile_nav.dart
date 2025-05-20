@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:phonebook/ui/widgets/IconButton.dart';
 import '../IconCircle.dart';
 
 class ProfileNavWidget extends StatelessWidget {
@@ -11,15 +12,12 @@ class ProfileNavWidget extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 20,
-        ),
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "전화번호 ${phone}",
+              "전화번호 $phone",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -27,25 +25,24 @@ class ProfileNavWidget extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Row(
-              mainAxisAlignment:
-              MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                IconCircleWidget(
+                IconButtonWidget(
                   icon: Icons.wifi_calling,
                   backgroundColor: Colors.lightGreen,
                   iconColor: Colors.white,
                 ),
-                IconCircleWidget(
+                IconButtonWidget(
                   icon: Icons.message_rounded,
                   backgroundColor: Colors.blueAccent,
                   iconColor: Colors.white,
                 ),
-                IconCircleWidget(
+                IconButtonWidget(
                   icon: Icons.video_call_rounded,
                   backgroundColor: Colors.lightGreen,
                   iconColor: Colors.white,
                 ),
-                IconCircleWidget(
+                IconButtonWidget(
                   icon: Icons.info,
                   backgroundColor: Colors.teal,
                   iconColor: Colors.white,

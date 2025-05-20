@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 class HeaderWidget extends StatelessWidget {
   final int headerFlex;
-  final int phoneLength;
+  // final int phoneLength;
+  final String title;
+  final String description;
 
-  const HeaderWidget({super.key, required this.headerFlex, required this.phoneLength});
+  const HeaderWidget({super.key, required this.headerFlex, required this.title, required this.description});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +17,8 @@ class HeaderWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            "전화",
+            // "전화",
+            title,
             style: TextStyle(
               color: Colors.white,
               fontSize: 40,
@@ -23,7 +26,8 @@ class HeaderWidget extends StatelessWidget {
             ),
           ),
           Text(
-            "전화번호가 저장된 연락처 $phoneLength개",
+            // "전화번호가 저장된 연락처 $phoneLength개",
+            description,
             style: TextStyle(color: Colors.white, fontSize: 14),
           ),
         ],

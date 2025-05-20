@@ -25,9 +25,7 @@ class _PhoneWidgetState extends State<PhoneWidget> {
         width: double.infinity,
         height: isOpen ? 170 : 60,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(
-            isOpen ? Radius.circular(20) : Radius.circular(40),
-          ),
+          borderRadius: BorderRadius.all(Radius.circular(30)),
           color: Colors.blueGrey.withAlpha(100),
         ),
         clipBehavior: Clip.antiAlias,
@@ -48,7 +46,10 @@ class _PhoneWidgetState extends State<PhoneWidget> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     spacing: 20,
                     children: [
-                      ProfileWidget(),
+                      ProfileWidget(
+                        status: widget.phoneData.phoneStatus,
+                        gradient: null,
+                      ),
                       Text(
                         widget.phoneData.name,
                         style: TextStyle(color: Colors.white, fontSize: 20),

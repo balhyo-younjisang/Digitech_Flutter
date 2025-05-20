@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:phonebook/ui/widgets/keypadTile.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class KeypadScreen extends StatefulWidget {
   const KeypadScreen({super.key});
@@ -151,7 +153,15 @@ class _KeypadScreenState extends State<KeypadScreen> {
                       )
                       : SizedBox(),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      // final Uri call = Uri.parse("tel:$formattedPhone");
+                      // if (await canLaunchUrl(call)) {
+                      //   launchUrl(call);
+                      // } else {
+                      //   throw 'Could not launch $call';
+                      // }
+                      await FlutterPhoneDirectCaller.callNumber("+82$inputPhone");
+                    },
                     style: ElevatedButton.styleFrom(
                       shape: CircleBorder(),
                       padding: EdgeInsets.all(12),

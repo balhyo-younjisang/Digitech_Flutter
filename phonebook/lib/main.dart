@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:phonebook/ui/pages/history.dart';
 import 'package:phonebook/ui/pages/keypad.dart';
 import 'package:phonebook/ui/pages/phonebook.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -16,6 +18,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        iconTheme: IconThemeData(color: Colors.white, size: 24),
+        dividerColor: Colors.transparent,
+        splashColor: Colors.transparent
       ),
       home: DefaultTabController(
         initialIndex: 2,
@@ -23,7 +28,7 @@ class MyApp extends StatelessWidget {
         child: Scaffold(
           backgroundColor: Colors.black,
           body: TabBarView(
-            children: [KeypadScreen(), Container(), PhoneBookScreen()],
+            children: [KeypadScreen(), HistoryScreen(), PhoneBookScreen()],
           ),
           bottomNavigationBar: TabBar(
             dividerHeight: 0,
