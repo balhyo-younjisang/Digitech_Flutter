@@ -1,3 +1,4 @@
+import 'package:assignment1/views/live_chat.dart';
 import 'package:assignment1/widgets/contact_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,13 +22,14 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
+        fontFamily: "Ubuntu",
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.white
         ),
         iconTheme: IconThemeData(
           color: Colors.white,
         ),
-        tabBarTheme: TabBarTheme(
+        tabBarTheme: TabBarThemeData(
           dividerColor: Colors.transparent,
           indicatorColor: Colors.white,
           labelColor: Colors.white
@@ -40,7 +42,8 @@ class MyApp extends StatelessWidget {
             color: Colors.white
           ),
           child: SafeArea(
-            child: ContactWrapper()
+            // child: ContactWrapper()
+            child: LiveChat(),
           )
         )
       )
