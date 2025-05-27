@@ -1,3 +1,4 @@
+import 'package:call_log/call_log.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:phonebook/domain/phone.dart';
@@ -10,6 +11,7 @@ import 'package:phonebook/utils/Icon.dart';
 class HistoryTile extends StatefulWidget {
   final String? displayName;
   final String? phone;
+  final CallType? callType;
 
   final void Function(ExpansionTileController controller) changeController;
   final ExpansionTileController controller = ExpansionTileController();
@@ -18,7 +20,7 @@ class HistoryTile extends StatefulWidget {
     super.key,
     this.displayName,
     required this.changeController,
-    this.phone,
+    this.phone, this.callType,
   });
 
   @override
@@ -48,8 +50,8 @@ class HistoryTileState extends State<HistoryTile> {
         spacing: 20,
         children: [
           IconCircleWidget(
-            iconColor: ColorUtil.buildPrefixColor(PhoneStatus.profile),
-            icon: IconUtil.buildPrefix(PhoneStatus.profile),
+            iconColor: ColorUtil.buildIconColorByCallType(widget.callType),
+            icon: IconUtil.buildIconByCallType(widget.callType),
           ),
           Flexible(
             child: RichText(

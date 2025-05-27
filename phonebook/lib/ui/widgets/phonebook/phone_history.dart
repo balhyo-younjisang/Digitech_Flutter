@@ -1,8 +1,6 @@
 import 'package:call_log/call_log.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_contacts/contact.dart';
-import 'package:phonebook/ui/widgets/phonebook/HistoryTile.dart';
-import 'package:phonebook/ui/widgets/phonebook/content_tile.dart';
+import 'package:phonebook/ui/widgets/phonebook/history_tile.dart';
 
 class PhoneHistory extends StatefulWidget {
   final int contentFlex;
@@ -47,6 +45,7 @@ class PhoneHistoryState extends State<PhoneHistory> {
                     displayName: entry.name,
                     phone: entry.number,
                     changeController: changeController,
+                    callType: entry.callType,
                   ),
                 );
               }).toList(),

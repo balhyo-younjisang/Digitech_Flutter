@@ -16,7 +16,6 @@ class _KeypadScreenState extends State<KeypadScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     inputPhone = "";
     formattedPhone = "";
@@ -25,6 +24,7 @@ class _KeypadScreenState extends State<KeypadScreen> {
   void clickNumber(String number) {
     inputPhone += number;
     setState(() {
+
       if (inputPhone.length > 3 && inputPhone.length <= 6) {
         formattedPhone =
             "${inputPhone.substring(0, 3)}-${inputPhone.substring(3, inputPhone.length)}";
@@ -56,6 +56,7 @@ class _KeypadScreenState extends State<KeypadScreen> {
             Flexible(
               flex: 3,
               child: GridView(
+                physics: NeverScrollableScrollPhysics(),
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   childAspectRatio: 3 / 2,

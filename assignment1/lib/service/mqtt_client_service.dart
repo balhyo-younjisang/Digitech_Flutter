@@ -5,7 +5,10 @@ Future<MqttServerClient> connectMqttBroker() async {
 
   // client.setProtocolV311();
   client.logging(on: true);
-  await client.connect();
+  client.onConnected = () => print("[MQTT Client] Connected successful");
+  client.onSubscribed = (subscription) => print("[MQTT Client] on subscribe ${subscription.topic}");
+  client.onDisconnected = () => print("[MQTT Client] Disconnected successful");
+  await client.connect("sdh-flutter", "1234");
 
   return client;
 }

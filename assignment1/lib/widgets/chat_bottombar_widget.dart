@@ -2,6 +2,8 @@ import 'package:assignment1/widgets/box_widget.dart';
 import 'package:assignment1/widgets/chat_icon_widget.dart';
 import 'package:flutter/material.dart';
 
+import '../views/live_chat.dart';
+
 class ChatBottomBar extends StatefulWidget {
   final void Function(String data) sendMessageHandler;
   const ChatBottomBar({super.key, required this.sendMessageHandler});
@@ -11,7 +13,7 @@ class ChatBottomBar extends StatefulWidget {
 }
 
 class ChatBottomBarState extends State<ChatBottomBar> {
-    late TextEditingController controller;
+  late TextEditingController controller;
 
   @override
   void initState() {
@@ -28,6 +30,7 @@ class ChatBottomBarState extends State<ChatBottomBar> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
+    final textFocus = context.findRootAncestorStateOfType<LiveChatState>()!.textFocus;
 
     final typingInputDecoration = InputDecoration(
       filled: true,
@@ -47,8 +50,7 @@ class ChatBottomBarState extends State<ChatBottomBar> {
       height: size.height * 0.085,
       child: Row(
         children: [
-          ChatIconButton(callback: () {
-          }, icon: Icons.add_circle_rounded),
+          ChatIconButton(callback: () {}, icon: Icons.add_circle_rounded),
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 10),
@@ -59,10 +61,17 @@ class ChatBottomBarState extends State<ChatBottomBar> {
                 expands: true,
                 maxLines: null,
                 minLines: null,
+                focusNode: textFocus,
               ),
             ),
           ),
-          ChatIconButton(callback: () {widget.sendMessageHandler(controller.text);}, icon: Icons.send_rounded),
+          ChatIconButton(
+            callback: () {
+              widget.sendMessageHandler(controller.text);
+              controller.clear();
+            },
+            icon: Icons.send_rounded,
+          ),
           ChatIconButton(callback: () {}, icon: Icons.emoji_emotions_rounded),
         ],
       ),
