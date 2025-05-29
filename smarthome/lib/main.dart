@@ -15,9 +15,11 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        fontFamily: "Arial",
+        scaffoldBackgroundColor: Color.fromRGBO(243, 244, 245, 1)
       ),
-      home: SplashScreen(),
-      // home: LayoutView(),
+      // home: SplashScreen(),
+      home: LayoutView(),
       debugShowCheckedModeBanner: false,
     );
   }

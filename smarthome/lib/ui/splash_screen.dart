@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smarthome/ui/widget/size_widget.dart';
+import 'package:smarthome/ui/widget/common/size_widget.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -77,9 +77,13 @@ class BackgroundPainter extends CustomPainter {
       ..strokeWidth = 20.0;
 
     Path path = Path()..moveTo(size.width, 0)..lineTo(size.width * 0.3, size.height * 0.25)..lineTo(size.width * 0.3, size.height);
-    Rect rect = Rect
+
+    final rectX = Offset(size.width * 3 / 6, size.height * 1 / 3);
+    final rectY = Offset(size.width * 1.5, size.height * 2 / 4);
+    Rect rect = Rect.fromPoints(rectX, rectY);
 
     canvas.drawPath(path, background);
+    canvas.drawRect(rect, background);
   }
 
   @override
