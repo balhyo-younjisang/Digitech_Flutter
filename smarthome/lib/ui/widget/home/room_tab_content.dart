@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
-import 'package:smarthome/model/switchable_content.dart';
-import 'package:smarthome/ui/widget/common/switch_widget.dart';
+import 'package:smarthome/model/device.dart';
+import 'package:smarthome/ui/widget/common/custom_text_factory.dart';
 
 class RoomTabContent extends StatefulWidget {
   final TabController tabController;
@@ -12,23 +12,22 @@ class RoomTabContent extends StatefulWidget {
 }
 
 class RoomTabContentState extends State<RoomTabContent> {
-  List<DeviceContent> devices = [
-    DeviceContent(
-      title: Icon(Symbols.mic,),
-      content: [Text("Smart Mic"), Text("40%")],
-    ),
-    DeviceContent(
-      title: Icon(Symbols.home_speaker_rounded),
-      content: [Text("Smart Speaker"), Text("40%")],
-    ),
-    DeviceContent(
-        title: Icon(Symbols.floor_lamp_rounded),
-        content: [Text("Smart Lamp"), Text("4 Red light")],
-    ),
-    DeviceContent(
-        title: Icon( Symbols.router_rounded),
-        content: <Widget>[Text("Wifi Router"), Text("100 Mbps")],
-    )
+  static CustomTextFactory simpleCustomTextFactory = CustomTextProducer.getFactory(
+    isBold: false,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  List<DeviceModel> devices = [
+    DeviceModel(icon: Icon(Symbols.mic, size: 36), name: "Smart Mic", description: "40%"),
+    DeviceModel(icon: Icon(Symbols.home_speaker_rounded, size: 36), name: "Smart Speaker", description: "40%"),
+    DeviceModel(icon: Icon(Symbols.floor_lamp_rounded, size: 36), name: "Smart Lamp", description: "4 Red light"),
+    DeviceModel(icon: Icon(Symbols.router_rounded, size: 36), name: "Wifi Router", description: "100 Mbps"),
+    DeviceModel(icon: Icon(Symbols.router_rounded, size: 36), name: "Wifi Router", description: "100 Mbps"),
+    DeviceModel(icon: Icon(Symbols.router_rounded, size: 36), name: "Wifi Router", description: "100 Mbps"),
   ];
 
   @override
@@ -47,7 +46,7 @@ class RoomTabContentState extends State<RoomTabContent> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text("Devices", style: TextStyle(fontSize: 20)),
+                    SimpleCustomStyleText.h2("Devices"),
                     Icon(Symbols.arrow_forward_ios_rounded),
                   ],
                 ),
@@ -66,12 +65,13 @@ class RoomTabContentState extends State<RoomTabContent> {
                     crossAxisCount: 2,
                     mainAxisSpacing: 10,
                     crossAxisSpacing: 10,
-                    childAspectRatio: 5 / 6
+                    childAspectRatio: 5 / 6,
                   ),
                   children: [
                     ...List.generate(devices.length, (index) {
                       var currentDevice = devices[index];
-                      return SwitchBox(switchableContent: currentDevice, /*changeOnOffHandler:changeOnOffHandler, index :index*/);
+                      // return SwitchBox(switchableContent: currentDevice);
+                      return Container();
                     }),
                   ],
                 ),

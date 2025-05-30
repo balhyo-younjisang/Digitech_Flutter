@@ -3,7 +3,7 @@ import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:smarthome/model/room_tab.dart';
 import 'package:smarthome/ui/widget/home/room_tab_content.dart';
 import 'package:smarthome/ui/widget/home/room_tab_header.dart';
-import 'package:smarthome/ui/widget/common/title_widget.dart';
+import 'package:smarthome/ui/widget/common/text_widget.dart';
 
 class HomeTab extends StatefulWidget {
   const HomeTab({super.key});
