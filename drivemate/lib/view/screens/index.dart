@@ -1,0 +1,1 @@
+export 'package:drivemate/view/screens/splash_screen.dart';
