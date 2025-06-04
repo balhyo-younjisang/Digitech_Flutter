@@ -242,11 +242,7 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
                             bool isValidationSuccess = validateUserInput();
 
                             if (isValidationSuccess) {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => const SelectCarPage(),
-                                ),
-                              );
+                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const SelectCarPage()), (route) => false,);
                             }
                           },
                         ),

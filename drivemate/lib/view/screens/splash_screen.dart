@@ -60,9 +60,7 @@ class _SplashScreenState extends State<SplashScreen>
       _animationController.dispose();
     } finally {
       if (mounted) {
-        Navigator.of(
-          context,
-        ).push(MaterialPageRoute(builder: (context) => const LoginPage()));
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginPage()), (route) => false,);
       }
     }
   }

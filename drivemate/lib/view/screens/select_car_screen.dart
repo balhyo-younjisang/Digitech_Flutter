@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:drivemate/model/car.dart';
 import 'package:drivemate/view/widgets/button.dart';
 import 'package:drivemate/view/widgets/icon_input.dart';
 import 'package:drivemate/view/widgets/symbol_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'home_screen.dart';
 
 class SelectCarPage extends StatefulWidget {
   const SelectCarPage({super.key});
@@ -21,6 +24,31 @@ class _SelectCarScreenState extends State<SelectCarPage>
   late final Animation<double> _carAnimation;
   late final TextEditingController _carNameController;
   late final TextEditingController _carNumberController;
+  late final PageController _pageController;
+  late int currentPage = 0;
+  bool isRemember = false;
+
+  final List<Car> _carList = [
+    Car(
+      imageLink:
+          "assets/images/genesis-kr-electrified-gv70-colors-glossy-capri-blue-large.png",
+      name: "Genesis GV70",
+    ),
+    Car(
+      imageLink:
+          "assets/images/genesis-kr-g80-facelift-sport-color-glossy-brooklyn-brown-large.png",
+      name: "Genesis G80",
+    ),
+    Car(
+      imageLink: "assets/images/genesis-kr-g90-black-specs-side-veiw-large.png",
+      name: "Genesis G90",
+    ),
+    Car(
+      imageLink:
+          "assets/images/genesis-kr-gv80-facelift-color-glossy-capri-blue-large.png",
+      name: "Genesis gv80",
+    ),
+  ];
 
   XFile? _image;
   final ImagePicker picker = ImagePicker();
@@ -34,9 +62,22 @@ class _SelectCarScreenState extends State<SelectCarPage>
   //   }
   // }
 
+  Future<List<Car>> _fetchCarListFromApi() async {
+    await Future.delayed(const Duration(seconds: 2));
+    return _carList;
+  }
+
+  void _onPageViewChange(int page) {
+    setState(() {
+      currentPage = page;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+
+    _pageController = PageController(initialPage: 0, viewportFraction: 0.8);
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1200),
@@ -57,6 +98,7 @@ class _SelectCarScreenState extends State<SelectCarPage>
     _animationController.dispose();
     _carNumberController.dispose();
     _carNameController.dispose();
+    _pageController.dispose();
   }
 
   @override
@@ -74,34 +116,224 @@ class _SelectCarScreenState extends State<SelectCarPage>
               left: 0,
               child: Image.asset(cloudAsset, width: size.width),
             ),
-            Column(
-              spacing: 120,
-              children: [
-                SymbolLogo(),
-                Column(
-                  children: [
-                    ScaleTransition(
-                      scale: _carAnimation,
-                      child: Image.asset(frontCarAsset),
+            FutureBuilder(
+              future: _fetchCarListFromApi(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData == false) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(),
+                        SizedBox(height: 30),
+                        Text(
+                          "차량 정보를 불러오는 중입니다",
+                          style: TextStyle(color: Colors.white, fontSize: 18),
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      width: size.width * 0.8,
-                      child: CustomButton(
-                        text: "차량 등록 후 이용하기",
-                        callback: () {
-                          selectCarDialog(context);
-                          setState(() {
-                            _image = null;
-                          });
-                          _carNameController.text = "";
-                          _carNumberController.text = "";
-                        },
-                        radius: BorderRadius.circular(3),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                  );
+                } else if (snapshot.hasError) {
+                  return Text(
+                    "Unknown Error",
+                    style: TextStyle(color: Colors.red, fontSize: 32),
+                  );
+                } else {
+                  if (_carList.isNotEmpty) {
+                    return Column(
+                      children: [
+                        SizedBox(height: 20),
+                        SymbolLogo(),
+                        SizedBox(height: 120),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                _pageController.animateToPage(
+                                  currentPage - 1,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.linear,
+                                );
+                              },
+                              icon: Icon(
+                                Icons.chevron_left,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                            ),
+                            SizedBox(
+                              width: size.width * 0.7,
+                              height: size.height * 0.2,
+                              child: PageView.builder(
+                                clipBehavior: Clip.hardEdge,
+                                onPageChanged: _onPageViewChange,
+                                itemCount: _carList.length,
+                                controller: _pageController,
+                                itemBuilder: (_, index) {
+                                  return AnimatedBuilder(
+                                    animation: _pageController,
+                                    builder: (context, child) {
+                                      return child!;
+                                    },
+                                    child: Column(
+                                      children: [
+                                        Image.asset(_carList[index].imageLink),
+                                        Text(
+                                          _carList[index].name,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+
+                            IconButton(
+                              onPressed: () {
+                                _pageController.animateToPage(
+                                  currentPage + 1,
+                                  duration: const Duration(milliseconds: 300),
+                                  curve: Curves.linear,
+                                );
+                              },
+                              icon: Icon(
+                                Icons.chevron_right,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 30),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    height: 30,
+                                    child: FittedBox(
+                                      fit: BoxFit.fitHeight,
+                                      child: Switch(
+                                        activeTrackColor: Color.fromRGBO(
+                                          118,
+                                          56,
+                                          0,
+                                          1.0,
+                                        ),
+                                        inactiveThumbColor: Colors.grey,
+                                        thumbIcon:
+                                            WidgetStateProperty.resolveWith<
+                                              Icon?
+                                            >((Set<WidgetState> states) {
+                                              if (states.contains(
+                                                WidgetState.selected,
+                                              )) {
+                                                return Icon(
+                                                  Icons.circle,
+                                                  color: Colors.deepOrange,
+                                                  size: 30,
+                                                );
+                                              }
+                                              return const Icon(
+                                                Icons.circle,
+                                                color: Colors.white10,
+                                                size: 30,
+                                              );
+                                            }),
+                                        value: isRemember,
+                                        onChanged: (newValue) {
+                                          setState(() {
+                                            isRemember = newValue;
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    "Remember",
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 40,),
+                              Column(
+                                children: [
+                                  Column(
+                                    spacing: 20,
+                                    children: [
+                                      CustomButton(
+                                        text: "이 차량 선택하기",
+                                        radius: BorderRadius.circular(5),
+                                        callback: () {
+                                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(car: _carList[currentPage],)));
+                                        },
+                                      ),
+                                      Opacity(opacity: 0.6, child: CustomButton(
+                                        text: "차량 등록하기",
+                                        radius: BorderRadius.circular(5),
+                                        callback: () {
+                                          selectCarDialog(context);
+                                          setState(() {
+                                            _image = null;
+                                          });
+                                          _carNameController.text = "";
+                                          _carNumberController.text = "";
+                                        },
+                                        backgroundColor: Colors.grey,
+
+                                      ),)
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return Column(
+                      spacing: 120,
+                      children: [
+                        SymbolLogo(),
+                        Column(
+                          children: [
+                            ScaleTransition(
+                              scale: _carAnimation,
+                              child: Image.asset(frontCarAsset),
+                            ),
+                            SizedBox(
+                              width: size.width * 0.8,
+                              height: size.height * 0.2,
+                              child: CustomButton(
+                                text: "차량 등록 후 이용하기",
+                                callback: () {
+                                  selectCarDialog(context);
+                                  setState(() {
+                                    _image = null;
+                                  });
+                                  _carNameController.text = "";
+                                  _carNumberController.text = "";
+                                },
+                                radius: BorderRadius.circular(3),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  }
+                }
+              },
             ),
           ],
         ),
@@ -188,7 +420,7 @@ class _SelectCarScreenState extends State<SelectCarPage>
                                 ),
                                 _image == null
                                     ? InkWell(
-                                        onTap: ()  {
+                                        onTap: () {
                                           _showSelectDialog(setStateDialog);
                                           // getImage(ImageSource.gallery);
                                         },

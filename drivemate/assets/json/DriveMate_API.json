@@ -1,0 +1,718 @@
+{
+  "version": 6,
+  "entities": [
+    {
+      "entity": {
+        "type": "Project",
+        "description": "HTTP Status 코드가 200이 아니거나 STATUS_CD 값이 E로 시작하면 오류.\n과제에 회원가입이 별도로 없으므로 API를 통해서 회원 가입 후 사용할 것.\n로그아웃이 토큰 값이 변경 됨.\n\n{\n\t\"temperature\": \"18 °C\", // 온도\n\t\"weather\": \"rainy_snow\", // 날씨({\"sunny\", \"cloud\", \"cloudy_snowing\", \"rainy\", \"rainy_snow\", \"thunderstorm\"}) 해당 아이콘 사용할 것\n\t\"location\": \"경상북도 영천시\", // 위치\n\n\t\"strtgYn\" : \"Y\", // 시동 켜짐/꺼짐 여부\n\t\"doorYn\" : \"Y\",  // 도어 열림/닫힘 여부\n\t\"wndwYn\" : \"Y\",  // 창문 열림/닫힘 여부\n\t\"emgncLmpYn\" : \"Y\", // 비상등 켜짐/꺼짐 여부\n\t\"drvngPosblDstnc\" : 50,  //주행가능 거리\n\t\"tailgateYn\" : \"Y\", // 테일게이트 열림/닫힘 여부\n\t\"hoodYn\" : \"Y\", // 휴드 열림/닫힘 여부\n\t\"cdysmYn\" : \"Y\", // 냉/난방 여부\n\t\"handleYn\" : \"Y\", // 핸들 열선 여부\n\t\"frontmirrorYn\" : \"Y\", // 앞유리 성에 제거 여부\n\t\"backmirrorHeatYn\" : \"Y\", // 뒷율 열섬 여부\n\t\"sidemirrorHeatYn\" : \"Y\" // 사이드미러 열선 여부\n}",
+        "id": "04370002-36e8-42dc-8e03-65b64e009bd6",
+        "name": "2025년 지방기능경기대회(Drive Mate)"
+      },
+      "children": [
+        {
+          "entity": {
+            "type": "Service",
+            "id": "e3923ca4-4638-4e00-916a-64eee69713c8",
+            "name": "100. Authentication"
+          },
+          "children": [
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+                  "name": "POST"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": [
+                      {
+                        "enabled": true,
+                        "type": "Text",
+                        "name": "mberId",
+                        "value": "user"
+                      },
+                      {
+                        "enabled": true,
+                        "type": "Text",
+                        "name": "mberPassword",
+                        "value": "1234"
+                      },
+                      {
+                        "enabled": true,
+                        "type": "Text",
+                        "name": "mberNm",
+                        "value": "1234"
+                      }
+                    ]
+                  },
+                  "bodyType": "Form"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "host": "${url}",
+                  "path": "/authenticate/signup"
+                },
+                "id": "24ef869b-1c0c-44a8-86bc-c099187c9f96",
+                "name": "101. Sign-up(회원가입)",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/x-www-form-urlencoded"
+                  }
+                ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+                  "name": "POST"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": [
+                      {
+                        "enabled": true,
+                        "type": "Text",
+                        "name": "mberId",
+                        "value": "user"
+                      },
+                      {
+                        "enabled": true,
+                        "type": "Text",
+                        "name": "mberPassword",
+                        "value": "1234"
+                      }
+                    ]
+                  },
+                  "bodyType": "Form",
+                  "textBody": "{\n    \"mberId\": \"solomini2\",\n    \"mberPassword\": \"1234\"\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "host": "${url}",
+                  "path": "/authenticate/signin"
+                },
+                "id": "b0859943-09a2-4684-8e22-cbed113ebf0d",
+                "name": "102. Sign-in(로그인)",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/x-www-form-urlencoded"
+                  }
+                ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": [
+                      {
+                        "enabled": true,
+                        "type": "Text",
+                        "name": "mberId",
+                        "value": "solomini1"
+                      },
+                      {
+                        "enabled": true,
+                        "type": "Text",
+                        "name": "mberPassword",
+                        "value": "1234"
+                      },
+                      {
+                        "enabled": true,
+                        "type": "Text",
+                        "name": "mberNm",
+                        "value": "1234"
+                      }
+                    ]
+                  },
+                  "bodyType": "Text",
+                  "textBody": ""
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "host": "${url}",
+                  "path": "/authenticate/signout"
+                },
+                "id": "43d09ad8-5c1a-4d68-9c94-d5aa9a6b0b37",
+                "name": "103. Sign-out(로그아웃)",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Authorization",
+                    "value": "Bearer ${tkn}"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "entity": {
+            "type": "Service",
+            "description": "이미지 업로드 기능을 구현 할 수 있을 경우 201번 API를 사용. 이미지 업로드 구현을 못 할경우 202번 API를 사용.",
+            "id": "b76057ad-0d2f-4791-b0e3-2cd2c8a58e96",
+            "name": "200. Car"
+          },
+          "children": [
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+                  "name": "POST"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "multipart/form-data",
+                    "items": [
+                      {
+                        "enabled": true,
+                        "type": "Text",
+                        "name": "carNm",
+                        "value": "GV80"
+                      },
+                      {
+                        "enabled": true,
+                        "type": "Text",
+                        "name": "carNo",
+                        "value": "190허 1400"
+                      },
+                      {
+                        "enabled": true,
+                        "type": "File",
+                        "name": "file"
+                      }
+                    ]
+                  },
+                  "bodyType": "Form",
+                  "textBody": ""
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "host": "${url}",
+                  "path": "/car"
+                },
+                "id": "867c1b15-53bf-406f-9ce9-955d1ef1075e",
+                "name": "201. 자동차 등록(이미지 업로드)",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Authorization",
+                    "value": "Bearer ${tkn}"
+                  },
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "multipart/form-data"
+                  }
+                ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.3",
+                  "name": "POST"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "multipart/form-data",
+                    "items": [
+                      {
+                        "enabled": true,
+                        "type": "Text",
+                        "name": "carNm",
+                        "value": "GV80"
+                      },
+                      {
+                        "enabled": true,
+                        "type": "Text",
+                        "name": "carNo",
+                        "value": "190허 1400"
+                      }
+                    ]
+                  },
+                  "bodyType": "Form",
+                  "textBody": ""
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "host": "${url}",
+                  "path": "/car-noupload"
+                },
+                "id": "a83d1893-7b29-4059-a5f3-beb5b6e5a972",
+                "name": "202. 자동차 등록(이미지 업로드 불가시)",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Authorization",
+                    "value": "Bearer ${tkn}"
+                  },
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "multipart/form-data"
+                  }
+                ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "multipart/form-data",
+                    "items": [
+                      {
+                        "enabled": true,
+                        "type": "Text",
+                        "name": "carNm",
+                        "value": "GV80"
+                      },
+                      {
+                        "enabled": true,
+                        "type": "Text",
+                        "name": "carNo",
+                        "value": "190허 1400"
+                      }
+                    ]
+                  },
+                  "bodyType": "Form",
+                  "textBody": ""
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "host": "${url}",
+                  "path": "/car"
+                },
+                "id": "c3d67230-2df0-4f6c-b53b-754deca92349",
+                "name": "203. 자동차 목록 조회",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Authorization",
+                    "value": "Bearer ${tkn}"
+                  }
+                ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.1",
+                  "name": "GET"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "multipart/form-data",
+                    "items": [
+                      {
+                        "enabled": true,
+                        "type": "Text",
+                        "name": "carNm",
+                        "value": "GV80"
+                      },
+                      {
+                        "enabled": true,
+                        "type": "Text",
+                        "name": "carNo",
+                        "value": "190허 1400"
+                      }
+                    ]
+                  },
+                  "bodyType": "Form",
+                  "textBody": ""
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": [
+                      {
+                        "enabled": true,
+                        "name": "detailYn",
+                        "value": "Y"
+                      }
+                    ]
+                  },
+                  "host": "${url}",
+                  "path": "/car/862BD8845A194C74921F690BCEE2D792"
+                },
+                "id": "a5ff4385-6519-427b-9e80-31a872068179",
+                "name": "204. 자동차 단일 조회",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Authorization",
+                    "value": "Bearer ${tkn}"
+                  }
+                ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
+                  "name": "PUT"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\n  \"strtgYn\" : \"Y\"\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "host": "${url}",
+                  "path": "/car/862BD8845A194C74921F690BCEE2D792/strtg"
+                },
+                "id": "c0a640bc-c08b-476a-9808-accdfe049906",
+                "name": "205. 자동차 시동 켜기/끄기",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "enabled": true,
+                    "name": "Authorization",
+                    "value": "Bearer ${tkn}"
+                  }
+                ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
+                  "name": "PUT"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\n  \"doorYn\" : \"Y\"\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "host": "${url}",
+                  "path": "/car/862BD8845A194C74921F690BCEE2D792/door"
+                },
+                "id": "d78a1b4e-4c15-4cbe-8b47-c28c58e2c446",
+                "name": "206. 자동차 문 열기/닫기",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "enabled": true,
+                    "name": "Authorization",
+                    "value": "Bearer ${tkn}"
+                  }
+                ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
+                  "name": "PUT"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\n  \"wndwYn\" : \"Y\"\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "host": "${url}",
+                  "path": "/car/862BD8845A194C74921F690BCEE2D792/wndw"
+                },
+                "id": "4b7923dc-00d4-47d9-adad-299bd881a346",
+                "name": "207. 자동차 창문 열기/닫기",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "enabled": true,
+                    "name": "Authorization",
+                    "value": "Bearer ${tkn}"
+                  }
+                ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
+                  "name": "PUT"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\n  \"emgncLmpYn\" : \"Y\"\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "host": "${url}",
+                  "path": "/car/862BD8845A194C74921F690BCEE2D792/emgncLmp"
+                },
+                "id": "0b4ea50f-852e-4a21-af01-2095af0bba3e",
+                "name": "208. 자동차 비상등 켜기/끄기",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "enabled": true,
+                    "name": "Authorization",
+                    "value": "Bearer ${tkn}"
+                  }
+                ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.5",
+                  "name": "DELETE"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": ""
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "host": "${url}",
+                  "path": "/car/862BD8845A194C74921F690BCEE2D792"
+                },
+                "id": "494e9e7b-5b95-4a5f-963d-463082756267",
+                "name": "299. 자동차 삭제",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Authorization",
+                    "value": "Bearer ${tkn}"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "entity": {
+            "type": "Service",
+            "id": "756d556b-74da-4e4f-8268-20435df9c090",
+            "name": "300. Car Util"
+          },
+          "children": [
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
+                  "name": "PUT"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\n  \"drvngPosblDstnc\" : 50\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "host": "${url}",
+                  "path": "/car/862BD8845A194C74921F690BCEE2D792/drvngPosblDstnc"
+                },
+                "id": "e12fa800-4f63-4bba-b76a-f173b16e2ee8",
+                "name": "301. 자동차 주행 가능 거리 조정",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "enabled": true,
+                    "name": "Authorization",
+                    "value": "Bearer ${tkn}"
+                  }
+                ]
+              }
+            },
+            {
+              "entity": {
+                "type": "Request",
+                "method": {
+                  "requestBody": true,
+                  "link": "http://tools.ietf.org/html/rfc7231#section-4.3.4",
+                  "name": "PUT"
+                },
+                "body": {
+                  "formBody": {
+                    "overrideContentType": true,
+                    "encoding": "application/x-www-form-urlencoded",
+                    "items": []
+                  },
+                  "bodyType": "Text",
+                  "textBody": "{\n\t\"strtgYn\" : \"Y\", \n\t\"doorYn\" : \"Y\", \n\t\"wndwYn\" : \"Y\", \n\t\"emgncLmpYn\" : \"Y\",\n\t\"drvngPosblDstnc\" : 500,\n\t\"tailgateYn\" : \"Y\",\n\t\"hoodYn\" : \"Y\",\n\t\"cdysmYn\" : \"Y\",\n\t\"handleYn\" : \"Y\",\n\t\"frontmirrorYn\" : \"Y\",\n\t\"backmirrorHeatYn\" : \"Y\",\n\t\"sidemirrorHeatYn\" : \"Y\"\n}"
+                },
+                "uri": {
+                  "query": {
+                    "delimiter": "&",
+                    "items": []
+                  },
+                  "host": "${url}",
+                  "path": "/car/862BD8845A194C74921F690BCEE2D792"
+                },
+                "id": "af5b84a8-1259-497d-8c89-ec85865d1f39",
+                "name": "302. 자동차 상태 일괄 수정",
+                "headers": [
+                  {
+                    "enabled": true,
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "enabled": true,
+                    "name": "Authorization",
+                    "value": "Bearer ${tkn}"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "environments": [
+    {
+      "id": "27becb56-c890-4c4d-90e7-34c47638658e",
+      "name": "2025년 지방기능경기대회(Drive Mate)",
+      "variables": {
+        "d4f0fdd0-d75d-475d-9f1d-7f3b8f9da8a4": {
+          "createdAt": "2024-07-26T17:51:53.067+09:00",
+          "name": "url",
+          "value": "http://api.db.pe.kr:51092/api",
+          "enabled": true,
+          "private": false
+        },
+        "1d68d695-c2df-43bd-af41-2a6c68d1e8b1": {
+          "createdAt": "2024-07-26T18:05:52.073+09:00",
+          "name": "tkn",
+          "value": "35CA5FE26C44435F9F821FFC97520762",
+          "enabled": true,
+          "private": false
+        }
+      }
+    }
+  ]
+}
