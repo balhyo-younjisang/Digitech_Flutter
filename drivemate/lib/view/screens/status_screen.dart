@@ -15,7 +15,6 @@ class StatusPage extends StatefulWidget {
 }
 
 class _StatusPageState extends State<StatusPage> {
-
   List<ControllerTabState> controllerState = [
     ControllerTabState(
       assets:
@@ -77,37 +76,6 @@ class _StatusPageState extends State<StatusPage> {
     HomePageState? homePageState = context
         .findRootAncestorStateOfType<HomePageState>();
 
-    List<TabState> carState = [
-      TabState(
-        assets: "assets/icons/door2.svg",
-        name: "도어",
-        state: homePageState?.isLock ?? false,
-        activateText: "열림",
-        inactivateText: "잠김",
-      ),
-      TabState(
-        assets: "assets/icons/car-door-svgrepo-com.svg",
-        name: "창문",
-        state: homePageState?.isDoorOpen ?? false,
-        activateText: "열림",
-        inactivateText: "닫힘",
-      ),
-      TabState(
-        assets: "assets/icons/tailgate.svg",
-        name: "테일게이트",
-        state: false,
-        activateText: "열림",
-        inactivateText: "닫힘",
-      ),
-      TabState(
-        assets: "assets/icons/bonnet.svg",
-        name: "후드",
-        state: false,
-        activateText: "열림",
-        inactivateText: "닫힘",
-      ),
-    ];
-
     final List<Tab> tabs = [
       Tab(
         child: SizedBox(
@@ -150,8 +118,8 @@ class _StatusPageState extends State<StatusPage> {
                   Padding(
                     padding: EdgeInsets.all(10),
                     child: Column(
-                      children: carState.map((car) {
-                        return Column(
+                      children: [
+                        Column(
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -160,14 +128,14 @@ class _StatusPageState extends State<StatusPage> {
                                   spacing: 10,
                                   children: [
                                     SvgPicture.asset(
-                                      car.assets,
+                                      "assets/icons/door2.svg",
                                       width: 30,
-                                      color: car.state
+                                      color: homePageState!.isDoorOpen
                                           ? Color.fromRGBO(178, 136, 124, 1)
                                           : Colors.black,
                                     ),
                                     Text(
-                                      car.name,
+                                      "도어",
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.bold,
@@ -178,13 +146,15 @@ class _StatusPageState extends State<StatusPage> {
                                 TextButton(
                                   onPressed: () {
                                     setState(() {
-                                      car.changeState(!car.state);
+                                      homePageState.setDoor(
+                                        !homePageState.isDoorOpen,
+                                      );
                                     });
                                   },
                                   child: Text(
-                                    car.stateText(),
+                                    homePageState.isDoorOpen ? "열림" : "잠김",
                                     style: TextStyle(
-                                      color: car.state
+                                      color: homePageState.isDoorOpen
                                           ? Color.fromRGBO(178, 136, 124, 1)
                                           : Colors.black,
                                     ),
@@ -193,9 +163,135 @@ class _StatusPageState extends State<StatusPage> {
                               ],
                             ),
                             Divider(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  spacing: 10,
+                                  children: [
+                                    SvgPicture.asset(
+                                      "assets/icons/car-door-svgrepo-com.svg",
+                                      width: 30,
+                                      color: homePageState!.isLock
+                                          ? Color.fromRGBO(178, 136, 124, 1)
+                                          : Colors.black,
+                                    ),
+                                    Text(
+                                      "창문",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      homePageState.setLock(
+                                        !homePageState.isLock,
+                                      );
+                                    });
+                                  },
+                                  child: Text(
+                                    homePageState.isLock ? "열림" : "닫힘",
+                                    style: TextStyle(
+                                      color: homePageState.isLock
+                                          ? Color.fromRGBO(178, 136, 124, 1)
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Divider(),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  spacing: 10,
+                                  children: [
+                                    SvgPicture.asset(
+                                      "assets/icons/tailgate.svg",
+                                      width: 30,
+                                      color: homePageState!.isTailgateOpen
+                                          ? Color.fromRGBO(178, 136, 124, 1)
+                                          : Colors.black,
+                                    ),
+                                    Text(
+                                      "테일게이트",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      homePageState.setTailgate(
+                                        !homePageState.isTailgateOpen,
+                                      );
+                                    });
+                                  },
+                                  child: Text(
+                                    homePageState.isTailgateOpen ? "열림" : "닫힘",
+                                    style: TextStyle(
+                                      color: homePageState.isTailgateOpen
+                                          ? Color.fromRGBO(178, 136, 124, 1)
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Divider(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  spacing: 10,
+                                  children: [
+                                    SvgPicture.asset(
+                                      "assets/icons/door2.svg",
+                                      width: 30,
+                                      color: homePageState!.isHoodOpen
+                                          ? Color.fromRGBO(178, 136, 124, 1)
+                                          : Colors.black,
+                                    ),
+                                    Text(
+                                      "도어",
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      homePageState.setHood(
+                                        !homePageState.isHoodOpen,
+                                      );
+                                    });
+                                  },
+                                  child: Text(
+                                    homePageState.isHoodOpen ? "열림" : "닫힘",
+                                    style: TextStyle(
+                                      color: homePageState.isHoodOpen
+                                          ? Color.fromRGBO(178, 136, 124, 1)
+                                          : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
-                        );
-                      }).toList(),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -360,104 +456,6 @@ class _StatusPageState extends State<StatusPage> {
               ),
             ),
           ],
-        ),
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: Colors.grey.withAlpha(200)),
-            borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-          ),
-          width: size.width,
-          height: 60,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 30,
-              children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => HomePage(car: widget.car),
-                      ),
-                      (route) => false,
-                    );
-                  },
-                  child: Column(
-                    children: [
-                      Icon(Icons.home_outlined, color: Colors.grey, size: 28),
-                      Text(
-                        "Home",
-                        style: TextStyle(color: Colors.grey, fontSize: 10),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: 1,
-                  height: size.height,
-                  decoration: BoxDecoration(color: Colors.grey.withAlpha(100)),
-                ),
-
-                Column(
-                  children: [
-                    Icon(
-                      Icons.control_camera_outlined,
-                      color: Colors.grey,
-                      size: 28,
-                    ),
-                    Text(
-                      "Control",
-                      style: TextStyle(color: Colors.grey, fontSize: 10),
-                    ),
-                  ],
-                ),
-                Container(
-                  width: 1,
-                  height: size.height,
-                  decoration: BoxDecoration(color: Colors.grey.withAlpha(100)),
-                ),
-
-                Column(
-                  children: [
-                    Icon(
-                      Icons.directions_car_outlined,
-                      color: Color.fromRGBO(178, 136, 124, 1),
-                      size: 28,
-                    ),
-                    Text(
-                      "Status",
-                      style: TextStyle(
-                        color: Color.fromRGBO(178, 136, 124, 1),
-                        fontSize: 10,
-                      ),
-                    ),
-                  ],
-                ),
-                Container(
-                  width: 1,
-                  height: size.height,
-                  decoration: BoxDecoration(color: Colors.grey.withAlpha(100)),
-                ),
-
-                Column(
-                  children: [
-                    SvgPicture.asset(
-                      "assets/icons/device_hub_black_24dp.svg",
-                      width: 28,
-                      color: Colors.grey,
-                    ),
-                    Text(
-                      "Share",
-                      style: TextStyle(color: Colors.grey, fontSize: 10),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:drivemate/model/user.dart';
 import 'package:drivemate/utils/string_util.dart';
 import 'package:drivemate/view/screens/select_car_screen.dart';
 import 'package:drivemate/view/widgets/button.dart';
@@ -33,7 +34,6 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
   // State variables
   bool _isRememberMe = false;
   String _toastMessage = "";
-  String username = "";
 
   @override
   void initState() {
@@ -143,9 +143,7 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       return false;
     }
 
-    setState(() {
-      username = usernameController.text;
-    });
+    User.username = usernameController.text;
     return true;
   }
 

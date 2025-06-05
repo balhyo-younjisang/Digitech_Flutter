@@ -168,11 +168,17 @@ class _SelectCarScreenState extends State<SelectCarPage>
                                     },
                                     child: Column(
                                       children: [
-                                        Image.asset(
-                                          _carList[index].imageLink,
-                                          height: 400,
-                                          width: size.width,
-                                        ),
+                                        _carList[index].isFile
+                                            ? Image.file(
+                                                File(_carList[index].imageLink),
+                                                height: 400,
+                                                width: size.width,
+                                              )
+                                            : Image.asset(
+                                                _carList[index].imageLink,
+                                                height: 400,
+                                                width: size.width,
+                                              ),
                                         Text(
                                           _carList[index].name,
                                           style: TextStyle(
@@ -282,18 +288,6 @@ class _SelectCarScreenState extends State<SelectCarPage>
                                           radius: BorderRadius.circular(5),
                                           callback: () {
                                             selectCarDialog(context);
-
-
-                                            setState(() {
-                                              _carList.add(
-                                                Car(
-                                                  imageLink: _image?.path,
-                                                  name: _carNameController.text,
-                                                ),
-                                              );
-                                              _image = null;
-                                            });
-
                                             _carNameController.text = "";
                                             _carNumberController.text = "";
                                           },
@@ -507,11 +501,30 @@ class _SelectCarScreenState extends State<SelectCarPage>
                           CustomButton(
                             text: "차량 등록 후 이용하기",
                             callback: () {
+                              if (_carNameController.text.isEmpty ||
+                                  _image == null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('차량 이름과 이미지를 모두 입력해주세요.'),
+                                  ),
+                                );
+                                return;
+                              }
+
                               setState(() {
+                                _carList.add(
+                                  Car(
+                                    imageLink: _image!.path,
+                                    name: _carNameController.text,
+                                    isFile: true,
+                                  ),
+                                );
                                 _image = null;
+                                _carNameController.clear();
+                                _carNumberController.clear();
                               });
-                              setStateDialog(() {});
-                              Navigator.pop(context);
+
+                              Navigator.of(context).pop(); // 다이얼로그 닫기
                             },
                             radius: BorderRadius.circular(3),
                           ),

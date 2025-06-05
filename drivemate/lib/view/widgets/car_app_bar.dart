@@ -18,7 +18,7 @@ class CarAppBar extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                carName.split(" ")[1],
+                carName,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
