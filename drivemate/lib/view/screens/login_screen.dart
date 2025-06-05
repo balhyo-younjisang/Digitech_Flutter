@@ -9,116 +9,174 @@ class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginPage> createState() => LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
-  final String redCarAsset = "assets/images/red_car.png";
-  late final AnimationController _animationController;
-  late final AnimationController _toastController;
+class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
+  // Constants
+  static const String _redCarAsset = "assets/images/red_car.png";
+  static const Duration _animationDuration = Duration(milliseconds: 2000);
+  static const Duration _toastDuration = Duration(milliseconds: 300);
+  static const Duration _toastDisplayDuration = Duration(milliseconds: 1000);
+  static const int _minInputLength = 4;
+
+  // Animation controllers
+  late final AnimationController _slideAnimationController;
+  late final AnimationController _toastAnimationController;
   late final Animation<Offset> _slideAnimation;
   late final Animation<Offset> _toastAnimation;
-  late final TextEditingController _usernameController;
+
+  // Form controllers
+  late final TextEditingController usernameController;
   late final TextEditingController _passwordController;
 
-  var isRemember = false;
-  String toastMessage = "";
+  // State variables
+  bool _isRememberMe = false;
+  String _toastMessage = "";
+  String username = "";
 
   @override
   void initState() {
     super.initState();
-    _toastController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 300),
-    );
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    );
-    _slideAnimation = Tween(begin: Offset(1.0, 0), end: Offset(0, 0)).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.linear),
-    );
-    _toastAnimation = Tween(
-      begin: Offset(0, -1),
-      end: Offset(0, 0),
-    ).animate(CurvedAnimation(parent: _toastController, curve: Curves.linear));
-    _animationController.forward();
-
-    _usernameController = TextEditingController();
-    _passwordController = TextEditingController();
+    _initializeAnimations();
+    _initializeControllers();
   }
 
   @override
   void dispose() {
+    _disposeAnimations();
+    _disposeControllers();
     super.dispose();
-    _animationController.dispose();
-    _usernameController.dispose();
+  }
+
+  // Initialization methods
+  void _initializeAnimations() {
+    _slideAnimationController = AnimationController(
+      vsync: this,
+      duration: _animationDuration,
+    );
+
+    _toastAnimationController = AnimationController(
+      vsync: this,
+      duration: _toastDuration,
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(1.0, 0),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _slideAnimationController,
+      curve: Curves.easeInOut,
+    ));
+
+    _toastAnimation = Tween<Offset>(
+      begin: const Offset(0, -1),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _toastAnimationController,
+      curve: Curves.easeInOut,
+    ));
+
+    _slideAnimationController.forward();
+  }
+
+  void _initializeControllers() {
+    usernameController = TextEditingController();
+    _passwordController = TextEditingController();
+  }
+
+  void _disposeAnimations() {
+    _slideAnimationController.dispose();
+    _toastAnimationController.dispose();
+  }
+
+  void _disposeControllers() {
+    usernameController.dispose();
     _passwordController.dispose();
-    _toastController.dispose();
   }
 
-  void showToastMessage(String message) async {
+  // Toast message methods
+  Future<void> _showToastMessage(String message) async {
     setState(() {
-      toastMessage = message;
+      _toastMessage = message;
     });
-    _toastController.forward();
-    await Future.delayed(const Duration(milliseconds: 1000));
-    await _toastController.reverse();
+
+    await _toastAnimationController.forward();
+    await Future.delayed(_toastDisplayDuration);
+    await _toastAnimationController.reverse();
+
     setState(() {
-      toastMessage = "";
+      _toastMessage = "";
     });
   }
 
-  bool validateUserInput() {
-    bool isFailed = false;
+  // Validation methods
+  bool _validateUserInput() {
+    var username = usernameController.text;
+    final password = _passwordController.text;
 
-    // 사용자 이름 또는 비밀번호가 입력되지 않음
-    String inputUserName = _usernameController.text;
-    String inputUserPassword = _passwordController.text;
-
-    List<StringValidator> usernameValidator = StringUtility.createValidator();
-    StringUtility.addValidator(
-      usernameValidator,
-      (input) => StringUtility.isStringEmpty(input, "Username", false),
+    // Validate username
+    final usernameValidators = StringUtility.createUsernameValidators(
+      minLength: _minInputLength,
     );
-    StringUtility.addValidator(
-      usernameValidator,
-      (input) => StringUtility.isStringIncludeBlank(input, "Username", false),
-    );
-    StringUtility.addValidator(
-      usernameValidator,
-      (input) => StringUtility.isStringShorterThan(input, 4, "Username", false),
+    final usernameResult = StringUtility.validateWithValidators(
+      username,
+      usernameValidators,
     );
 
-    List<StringValidator> passwordValidator = StringUtility.createValidator();
-    StringUtility.addValidator(
-      passwordValidator,
-      (input) => StringUtility.isStringEmpty(input, "Password", false),
-    );
-    StringUtility.addValidator(
-      passwordValidator,
-      (input) => StringUtility.isStringShorterThan(input, 4, "Password", false),
-    );
-
-    for (var validator in usernameValidator) {
-      final result = validator(inputUserName);
-      print("${result.message} :: ${result.isTrue} / $inputUserName");
-      if (result.isTrue && !isFailed) {
-        showToastMessage(result.message);
-        isFailed = true;
-      }
+    if (!usernameResult.isValid) {
+      _showToastMessage(usernameResult.message);
+      return false;
     }
 
-    for (var validator in passwordValidator) {
-      final result = validator(inputUserPassword);
-      print("${result.message} :: ${result.isTrue}");
-      if (result.isTrue && !isFailed) {
-        showToastMessage(result.message);
-        isFailed = true;
-      }
+    // Validate password
+    final passwordValidators = StringUtility.createPasswordValidators(
+      minLength: _minInputLength,
+    );
+    final passwordResult = StringUtility.validateWithValidators(
+      password,
+      passwordValidators,
+    );
+
+    if (!passwordResult.isValid) {
+      _showToastMessage(passwordResult.message);
+      return false;
     }
 
-    return !isFailed;
+    setState(() {
+      username = usernameController.text;
+    });
+    return true;
+  }
+
+  // Navigation methods
+  void _navigateToSelectCarPage() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const SelectCarPage()),
+          (route) => false,
+    );
+  }
+
+  // Event handlers
+  void _onSignInPressed() {
+    if (_validateUserInput()) {
+      _navigateToSelectCarPage();
+    }
+  }
+
+  void _onSignUpPressed() {
+    _showToastMessage("아직 회원가입 페이지는 구현되지 않았어요.");
+  }
+
+  void _onPasswordResetPressed() {
+    _showToastMessage("아직 비밀번호 초기화 기능은 구현되지 않았어요.");
+  }
+
+  void _onRememberMeChanged(bool value) {
+    setState(() {
+      _isRememberMe = value;
+    });
   }
 
   @override
@@ -130,158 +188,170 @@ class _LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       body: SingleChildScrollView(
         child: Stack(
           children: [
-            Positioned(
-              child: toastMessage.isNotEmpty
-                  ? SlideTransition(
-                      position: _toastAnimation,
-                      child: Container(
-                        width: size.width,
-                        height: 60,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: Text(
-                          toastMessage,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                            height: 4,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    )
-                  : SizedBox(),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 70),
-              child: Column(
-                children: [
-                  SymbolLogo(),
-                  SlideTransition(
-                    position: _slideAnimation,
-                    child: Image.asset(redCarAsset),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 30),
-                    child: Column(
-                      spacing: 10,
-                      children: [
-                        Text(
-                          "로그인 정보를 입력하세요.",
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.white,
-                            height: 4,
-                          ),
-                        ),
-                        IconInput(
-                          controller: _usernameController,
-                          icon: Icons.person_rounded,
-                          label: "Username",
-                        ),
-                        IconInput(
-                          controller: _passwordController,
-                          icon: Icons.lock_rounded,
-                          label: "Password",
-                          isSecure: true,
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              height: 30,
-                              child: FittedBox(
-                                fit: BoxFit.fitHeight,
-                                child: Switch(
-                                  activeTrackColor: Color.fromRGBO(
-                                    118,
-                                    56,
-                                    0,
-                                    1.0,
-                                  ),
-                                  inactiveThumbColor: Colors.grey,
-                                  thumbIcon:
-                                      WidgetStateProperty.resolveWith<Icon?>((
-                                        Set<WidgetState> states,
-                                      ) {
-                                        if (states.contains(
-                                          WidgetState.selected,
-                                        )) {
-                                          return Icon(
-                                            Icons.circle,
-                                            color: Colors.deepOrange,
-                                            size: 30,
-                                          );
-                                        }
-                                        return const Icon(
-                                          Icons.circle,
-                                          color: Colors.white10,
-                                          size: 30,
-                                        );
-                                      }),
-                                  value: isRemember,
-                                  onChanged: (newValue) {
-                                    setState(() {
-                                      isRemember = newValue;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                            Text(
-                              "Remember",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                        CustomButton(
-                          text: "Sign In",
-                          radius: BorderRadius.circular(5),
-                          callback: () {
-                            bool isValidationSuccess = validateUserInput();
-
-                            if (isValidationSuccess) {
-                              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const SelectCarPage()), (route) => false,);
-                            }
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 30),
-                          child: Column(
-                            spacing: 10,
-                            children: [
-                              CustomButton(
-                                text: "Sign Up",
-                                radius: BorderRadius.circular(5),
-                                callback: () {
-                                  showToastMessage("아직 회원가입 페이지는 구현되지 않았어요.");
-                                },
-                                backgroundColor: Colors.grey,
-                              ),
-                              CustomButton(
-                                backgroundColor: Colors.white,
-                                textStyle: TextStyle(color: Colors.black),
-                                text: "Password Reset",
-                                radius: BorderRadius.circular(5),
-                                callback: () {
-                                  showToastMessage(
-                                    "아직 비밀번호 초기화 기능은 구현되지 않았어요.",
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildToastMessage(),
+            _buildMainContent(size),
           ],
         ),
+      ),
+    );
+  }
+
+  // UI Building methods
+  Widget _buildToastMessage() {
+    if (_toastMessage.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    return Positioned(
+      child: SlideTransition(
+        position: _toastAnimation,
+        child: Center(child: Container(
+          width: MediaQuery.of(context).size.width * 0.95,
+          height: 60,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: Center(
+            child: Text(
+              _toastMessage,
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 16,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      )),
+    );
+  }
+
+  Widget _buildMainContent(Size size) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 70),
+      child: Column(
+        children: [
+          const SymbolLogo(),
+          _buildCarImage(),
+          _buildLoginForm(size),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCarImage() {
+    return SlideTransition(
+      position: _slideAnimation,
+      child: Image.asset(_redCarAsset),
+    );
+  }
+
+  Widget _buildLoginForm(Size size) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30),
+      child: SizedBox(width: size.width * 0.8,  child:Column(
+        spacing: 10,
+        children: [
+          _buildLoginTitle(),
+          _buildUsernameField(),
+          _buildPasswordField(),
+          _buildRememberMeSwitch(),
+          _buildSignInButton(),
+          const SizedBox(height: 10),
+          _buildAdditionalButtons(),
+        ],
+      )),
+    );
+  }
+
+  Widget _buildLoginTitle() {
+    return const Text(
+      "로그인 정보를 입력하세요.",
+      style: TextStyle(
+        fontSize: 16,
+        color: Colors.white,
+        height: 3,
+      ),
+    );
+  }
+
+  Widget _buildUsernameField() {
+    return IconInput(
+      controller: usernameController,
+      icon: Icons.person_rounded,
+      label: "Username",
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return IconInput(
+      controller: _passwordController,
+      icon: Icons.lock_rounded,
+      label: "Password",
+      isSecure: true,
+    );
+  }
+
+  Widget _buildRememberMeSwitch() {
+    return Row(
+      children: [
+        SizedBox(
+          height: 30,
+          child: FittedBox(
+            fit: BoxFit.fitHeight,
+            child: Switch(
+              activeTrackColor: const Color.fromRGBO(118, 56, 0, 1.0),
+              inactiveThumbColor: Colors.grey,
+              thumbIcon: WidgetStateProperty.resolveWith<Icon?>((states) {
+                final isSelected = states.contains(WidgetState.selected);
+                return Icon(
+                  Icons.circle,
+                  color: isSelected ? Colors.deepOrange : Colors.white10,
+                  size: 30,
+                );
+              }),
+              value: _isRememberMe,
+              onChanged: _onRememberMeChanged,
+            ),
+          ),
+        ),
+        const Text(
+          "Remember",
+          style: TextStyle(color: Colors.white),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSignInButton() {
+    return CustomButton(
+      text: "Sign In",
+      radius: BorderRadius.circular(5),
+      callback: _onSignInPressed,
+    );
+  }
+
+  Widget _buildAdditionalButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30),
+      child: Column(
+        spacing: 10,
+        children: [
+          CustomButton(
+            text: "Sign Up",
+            radius: BorderRadius.circular(5),
+            callback: _onSignUpPressed,
+            backgroundColor: Colors.grey,
+          ),
+          CustomButton(
+            backgroundColor: Colors.white,
+            textStyle: const TextStyle(color: Colors.black),
+            text: "Password Reset",
+            radius: BorderRadius.circular(5),
+            callback: _onPasswordResetPressed,
+          ),
+        ],
       ),
     );
   }

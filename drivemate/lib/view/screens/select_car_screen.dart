@@ -120,32 +120,20 @@ class _SelectCarScreenState extends State<SelectCarPage>
               future: _fetchCarListFromApi(),
               builder: (BuildContext context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData == false) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        CircularProgressIndicator(),
-                        SizedBox(height: 30),
-                        Text(
-                          "차량 정보를 불러오는 중입니다",
-                          style: TextStyle(color: Colors.white, fontSize: 18),
-                        ),
-                      ],
-                    ),
-                  );
+                  return _buildLoadingDialog();
                 } else if (snapshot.hasError) {
                   return Text(
-                    "Unknown Error",
+                    "알 수 없는 에러가 발생했습니다.",
                     style: TextStyle(color: Colors.red, fontSize: 32),
                   );
                 } else {
                   if (_carList.isNotEmpty) {
                     return Column(
                       children: [
-                        SizedBox(height: 20),
-                        SymbolLogo(),
-                        SizedBox(height: 120),
+                        Padding(
+                          padding: EdgeInsets.symmetric(vertical: 120),
+                          child: SymbolLogo(),
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -165,8 +153,8 @@ class _SelectCarScreenState extends State<SelectCarPage>
                               ),
                             ),
                             SizedBox(
-                              width: size.width * 0.7,
-                              height: size.height * 0.2,
+                              width: size.width * 0.8,
+                              height: size.height * 0.4,
                               child: PageView.builder(
                                 clipBehavior: Clip.hardEdge,
                                 onPageChanged: _onPageViewChange,
@@ -180,7 +168,11 @@ class _SelectCarScreenState extends State<SelectCarPage>
                                     },
                                     child: Column(
                                       children: [
-                                        Image.asset(_carList[index].imageLink),
+                                        Image.asset(
+                                          _carList[index].imageLink,
+                                          height: 400,
+                                          width: size.width,
+                                        ),
                                         Text(
                                           _carList[index].name,
                                           style: TextStyle(
@@ -264,7 +256,7 @@ class _SelectCarScreenState extends State<SelectCarPage>
                                   ),
                                 ],
                               ),
-                              SizedBox(height: 40,),
+                              SizedBox(height: 40),
                               Column(
                                 children: [
                                   Column(
@@ -274,23 +266,40 @@ class _SelectCarScreenState extends State<SelectCarPage>
                                         text: "이 차량 선택하기",
                                         radius: BorderRadius.circular(5),
                                         callback: () {
-                                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => HomePage(car: _carList[currentPage],)));
+                                          Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                              builder: (context) => HomePage(
+                                                car: _carList[currentPage],
+                                              ),
+                                            ),
+                                          );
                                         },
                                       ),
-                                      Opacity(opacity: 0.6, child: CustomButton(
-                                        text: "차량 등록하기",
-                                        radius: BorderRadius.circular(5),
-                                        callback: () {
-                                          selectCarDialog(context);
-                                          setState(() {
-                                            _image = null;
-                                          });
-                                          _carNameController.text = "";
-                                          _carNumberController.text = "";
-                                        },
-                                        backgroundColor: Colors.grey,
+                                      Opacity(
+                                        opacity: 0.6,
+                                        child: CustomButton(
+                                          text: "차량 등록하기",
+                                          radius: BorderRadius.circular(5),
+                                          callback: () {
+                                            selectCarDialog(context);
 
-                                      ),)
+
+                                            setState(() {
+                                              _carList.add(
+                                                Car(
+                                                  imageLink: _image?.path,
+                                                  name: _carNameController.text,
+                                                ),
+                                              );
+                                              _image = null;
+                                            });
+
+                                            _carNameController.text = "";
+                                            _carNumberController.text = "";
+                                          },
+                                          backgroundColor: Colors.grey,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ],
@@ -337,6 +346,23 @@ class _SelectCarScreenState extends State<SelectCarPage>
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildLoadingDialog() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(height: 30),
+          Text(
+            "차량 정보를 불러오는 중입니다",
+            style: TextStyle(color: Colors.white, fontSize: 16),
+          ),
+        ],
       ),
     );
   }

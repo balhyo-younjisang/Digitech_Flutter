@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:drivemate/model/car.dart';
+import 'package:drivemate/view/screens/login_screen.dart';
 import 'package:drivemate/view/screens/status_screen.dart';
 import 'package:drivemate/view/widgets/car_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -12,18 +13,17 @@ class HomePage extends StatefulWidget {
   final Car car;
 
   @override
-  State<StatefulWidget> createState() => _HomePageState();
+  State<StatefulWidget> createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage>
+class HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
   bool isPowerOn = false;
   bool isLock = false;
   bool isDoorOpen = false;
   bool isWarning = false;
   bool isLoading = false;
-  bool isPowerOnWidget = false;
-  bool isLockWidget = false;
+
   late Timer timer;
   late Color warningColor = Colors.red;
   late final ScrollController _scrollController;
@@ -114,7 +114,10 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
+    String? username = context
+        .findRootAncestorStateOfType<LoginPageState>()
+        ?.username;
+    
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -133,7 +136,8 @@ class _HomePageState extends State<HomePage>
                 height: size.height * 0.5,
                 child: ListView.builder(
                   controller: _cloudScrollController,
-                  // physics: NeverScrollableScrollPhysics(),
+                  physics: NeverScrollableScrollPhysics(),
+                  reverse: true,
                   itemCount: cloudImageList.length,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (BuildContext context, int index) {
@@ -192,10 +196,10 @@ class _HomePageState extends State<HomePage>
                           ),
                           isWidgetOpen
                               ? Positioned(
-                                  top: 80,
+                                  top: 250,
                                   child: Container(
-                                    width: size.width * 0.89,
-                                    height: 100,
+                                    width: size.width,
+                                    height: 200,
                                     decoration: BoxDecoration(
                                       color: Colors.black.withAlpha(200),
                                       borderRadius: BorderRadius.all(
@@ -232,13 +236,13 @@ class _HomePageState extends State<HomePage>
                                                       124,
                                                       1,
                                                     ),
-                                                    width: 12,
+                                                    width: 32,
                                                   ),
                                                   Text(
                                                     "Drive Mate",
                                                     style: TextStyle(
                                                       color: Colors.white,
-                                                      fontSize: 10,
+                                                      fontSize: 24,
                                                       fontWeight:
                                                           FontWeight.bold,
                                                     ),
@@ -247,7 +251,7 @@ class _HomePageState extends State<HomePage>
                                               ),
                                               SvgPicture.asset(
                                                 "assets/icons/settings_24dp_5F6368_FILL0_wght400_GRAD0_opsz24.svg",
-                                                width: 12,
+                                                width: 32,
                                                 color: Colors.white,
                                               ),
                                             ],
@@ -259,63 +263,24 @@ class _HomePageState extends State<HomePage>
                                           ),
                                           child: Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.center,
+                                                MainAxisAlignment.spaceAround,
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.center,
                                             children: [
                                               Image.asset(
                                                 widget.car.imageLink,
-                                                width: 120,
+                                                width: 280,
                                               ),
                                               SizedBox(
-                                                height: 50,
+                                                height: 120,
                                                 child: Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.end,
+                                                  // crossAxisAlignment:
+                                                  //     CrossAxisAlignment.end,
                                                   children: [
                                                     InkWell(
                                                       onTap: () {
                                                         setState(() {
-                                                          isLockWidget = false;
-                                                        });
-                                                      },
-                                                      child: Container(
-                                                        width: 40,
-                                                        height: 40,
-                                                        decoration:
-                                                            BoxDecoration(
-                                                              color:
-                                                                  Colors.black,
-                                                              shape: BoxShape
-                                                                  .circle,
-                                                            ),
-                                                        alignment:
-                                                            Alignment.center,
-                                                        child: SvgPicture.asset(
-                                                          "assets/icons/lock_24dp_5F6368_FILL0_wght300_GRAD200_opsz24.svg",
-                                                          color:
-                                                              isLockWidget ==
-                                                                  false
-                                                              ? Color.fromRGBO(
-                                                                  178,
-                                                                  136,
-                                                                  124,
-                                                                  1,
-                                                                )
-                                                              : Colors.grey
-                                                                    .withAlpha(
-                                                                      200,
-                                                                    ),
-                                                          height: 25,
-                                                          width: 25,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    InkWell(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          isPowerOnWidget =
-                                                              !isPowerOnWidget;
+                                                          isLock = false;
                                                         });
                                                       },
                                                       child: Container(
@@ -331,8 +296,8 @@ class _HomePageState extends State<HomePage>
                                                         alignment:
                                                             Alignment.center,
                                                         child: SvgPicture.asset(
-                                                          "assets/icons/power_settings_new_24dp_5F6368_FILL0_wght300_GRAD200_opsz24.svg",
-                                                          color: isPowerOnWidget
+                                                          "assets/icons/lock_24dp_5F6368_FILL0_wght300_GRAD200_opsz24.svg",
+                                                          color: isLock == false
                                                               ? Color.fromRGBO(
                                                                   178,
                                                                   136,
@@ -343,7 +308,7 @@ class _HomePageState extends State<HomePage>
                                                                     .withAlpha(
                                                                       200,
                                                                     ),
-                                                          height: 30,
+                                                          height: 40,
                                                           width: 40,
                                                         ),
                                                       ),
@@ -351,12 +316,49 @@ class _HomePageState extends State<HomePage>
                                                     InkWell(
                                                       onTap: () {
                                                         setState(() {
-                                                          isLockWidget = true;
+                                                          isPowerOn =
+                                                              !isPowerOn;
                                                         });
                                                       },
                                                       child: Container(
-                                                        width: 40,
-                                                        height: 40,
+                                                        width: 100,
+                                                        height: 100,
+                                                        decoration:
+                                                            BoxDecoration(
+                                                              color:
+                                                                  Colors.black,
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                            ),
+                                                        alignment:
+                                                            Alignment.center,
+                                                        child: SvgPicture.asset(
+                                                          "assets/icons/power_settings_new_24dp_5F6368_FILL0_wght300_GRAD200_opsz24.svg",
+                                                          color: isPowerOn
+                                                              ? Color.fromRGBO(
+                                                                  178,
+                                                                  136,
+                                                                  124,
+                                                                  1,
+                                                                )
+                                                              : Colors.grey
+                                                                    .withAlpha(
+                                                                      200,
+                                                                    ),
+                                                          height: 60,
+                                                          width: 80,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    InkWell(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          isLock = true;
+                                                        });
+                                                      },
+                                                      child: Container(
+                                                        width: 80,
+                                                        height: 60,
                                                         decoration:
                                                             BoxDecoration(
                                                               color:
@@ -368,9 +370,7 @@ class _HomePageState extends State<HomePage>
                                                             Alignment.center,
                                                         child: SvgPicture.asset(
                                                           "assets/icons/lock_open_24dp_5F6368_FILL0_wght300_GRAD200_opsz24.svg",
-                                                          color:
-                                                              isLockWidget ==
-                                                                  true
+                                                          color: isLock == true
                                                               ? Color.fromRGBO(
                                                                   178,
                                                                   136,
@@ -381,8 +381,8 @@ class _HomePageState extends State<HomePage>
                                                                     .withAlpha(
                                                                       200,
                                                                     ),
-                                                          height: 25,
-                                                          width: 25,
+                                                          height: 40,
+                                                          width: 40,
                                                         ),
                                                       ),
                                                     ),
@@ -560,7 +560,7 @@ class _HomePageState extends State<HomePage>
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "Brown님 안녕하세요",
+                            "${username ?? 'Unknown'}님 안녕하세요",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
@@ -569,7 +569,7 @@ class _HomePageState extends State<HomePage>
                           SizedBox(height: 30),
                           Container(
                             width: size.width,
-                            height: 240,
+                            height: 360,
                             decoration: BoxDecoration(
                               color: Colors.black,
                               borderRadius: BorderRadius.all(
@@ -579,6 +579,7 @@ class _HomePageState extends State<HomePage>
                             child: Padding(
                               padding: EdgeInsets.all(20),
                               child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 spacing: 10,
                                 children: [
                                   Row(

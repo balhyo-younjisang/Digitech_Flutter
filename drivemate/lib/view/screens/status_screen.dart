@@ -15,36 +15,6 @@ class StatusPage extends StatefulWidget {
 }
 
 class _StatusPageState extends State<StatusPage> {
-  List<TabState> carState = [
-    TabState(
-      assets: "assets/icons/door2.svg",
-      name: "도어",
-      state: false,
-      activateText: "열림",
-      inactivateText: "잠김",
-    ),
-    TabState(
-      assets: "assets/icons/car-door-svgrepo-com.svg",
-      name: "창문",
-      state: false,
-      activateText: "열림",
-      inactivateText: "닫힘",
-    ),
-    TabState(
-      assets: "assets/icons/tailgate.svg",
-      name: "테일게이트",
-      state: false,
-      activateText: "열림",
-      inactivateText: "닫힘",
-    ),
-    TabState(
-      assets: "assets/icons/bonnet.svg",
-      name: "후드",
-      state: false,
-      activateText: "열림",
-      inactivateText: "닫힘",
-    ),
-  ];
 
   List<ControllerTabState> controllerState = [
     ControllerTabState(
@@ -103,6 +73,41 @@ class _StatusPageState extends State<StatusPage> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+
+    HomePageState? homePageState = context
+        .findRootAncestorStateOfType<HomePageState>();
+
+    List<TabState> carState = [
+      TabState(
+        assets: "assets/icons/door2.svg",
+        name: "도어",
+        state: homePageState?.isLock ?? false,
+        activateText: "열림",
+        inactivateText: "잠김",
+      ),
+      TabState(
+        assets: "assets/icons/car-door-svgrepo-com.svg",
+        name: "창문",
+        state: homePageState?.isDoorOpen ?? false,
+        activateText: "열림",
+        inactivateText: "닫힘",
+      ),
+      TabState(
+        assets: "assets/icons/tailgate.svg",
+        name: "테일게이트",
+        state: false,
+        activateText: "열림",
+        inactivateText: "닫힘",
+      ),
+      TabState(
+        assets: "assets/icons/bonnet.svg",
+        name: "후드",
+        state: false,
+        activateText: "열림",
+        inactivateText: "닫힘",
+      ),
+    ];
+
     final List<Tab> tabs = [
       Tab(
         child: SizedBox(
